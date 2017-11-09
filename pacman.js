@@ -28,13 +28,15 @@ var pinky = {
   edible: false
 };
 
-var Clyde = {
+var clyde = {
   menu_option: '4',
   name: 'Clyde',
   colour: 'Orange',
   character: 'Pokey',
   edible: false
 };
+
+var ghosts = [inky,blinky,pinky,clyde];
 
 
 // Draw the screen functionality
@@ -58,6 +60,12 @@ function displayStats() {
 function displayMenu() {
   console.log('\n\nSelect Option:\n');  // each \n creates a new line
   console.log('(d) Eat Dot');
+
+  // add options in the menu to eat each ghost 
+  ghosts.forEach( function(ghost,index){
+    console.log( '(' + (index+1) + ') Eat ' + ghost.name );
+  });
+
   console.log('(q) Quit');
 }
 
