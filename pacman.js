@@ -1,6 +1,7 @@
 // Setup initial game stats
 var score = 0;
 var lives = 2;
+var pellets = 4;
 
 
 // Define your ghosts here
@@ -55,15 +56,25 @@ function clearScreen() {
 
 function displayStats() {
   console.log('Score: ' + score + '     Lives: ' + lives);
+  console.log('\nPower-Pellets: ' + pellets)
 }
 
 function displayMenu() {
   console.log('\n\nSelect Option:\n');  // each \n creates a new line
   console.log('(d) Eat Dot');
 
-  // add options in the menu to eat each ghost 
+  if (pellets != 0){
+    console.log('(p) Eat Power-Pellets');
+  }
+
+  // add options in the menu to eat each ghost
   ghosts.forEach( function(ghost,index){
-    console.log( '(' + (index+1) + ') Eat ' + ghost.name );
+    if (ghost.edible==true){
+      edibility = '(edible)';
+    } else{
+      edibility = '(inedible)';
+    }
+    console.log( '(' + (index+1) + ') Eat ' + ghost.name + '  ' + edibility);
   });
 
   console.log('(q) Quit');
@@ -81,6 +92,31 @@ function eatDot() {
   score += 10;
 }
 
+function eatGhost(ghost){
+  if (ghost.edible === false){
+    console.log('\n' + ghost.colour + ' ' + ghost.name + 'kills pacman...');
+    lives -= 1;
+  } else {
+    console.log('Pacman has eaten ' + ghost.name + '. The ' + ghost.character + ' ghost.')
+    score += 200;
+    ghost.edible = false;
+  }
+  checkLives();
+}
+
+function eatPowerPellet(){
+  score += 50;
+  ghosts.forEach( function(ghost){
+    ghost.edible = true;
+  });
+  pellets -= 1;
+}
+
+function checkLives(){
+  if (lives === -1)
+  process.exit();
+}
+
 
 // Process Player's Input
 function processInput(key) {
@@ -91,6 +127,25 @@ function processInput(key) {
       break;
     case 'd':
       eatDot();
+      break;
+    case 'p':
+      if (pellets != 0) {
+        eatPowerPellet();
+      } else {
+        console.log('\nNo Power-Pellets left!');
+      }
+      break;
+    case '1':
+      eatGhost(ghosts[0]);
+      break;
+    case '2':
+      eatGhost(ghosts[1]);
+      break;
+    case '3':
+      eatGhost(ghosts[2]);
+      break;
+    case '4':
+      eatGhost(ghosts[3]);
       break;
     default:
       console.log('\nInvalid Command!');
